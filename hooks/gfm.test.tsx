@@ -128,6 +128,21 @@ describe('AssistantMessage', () => {
     }
   })
 
+  test('spaces alerts out on desktop only', async $ => {
+    for (const [surface, margin] of [['terminal', 0], ['desktop', 1]] as const) {
+      const ui = await $.ui.mount({
+        plugin: 'gfm-render',
+        surface,
+        component: 'AssistantMessage',
+        props: { text: REPLY, isFirstOfReply: false },
+      })
+      const box = await ui.find({ key: 'alert-1' })
+      expect(box?.props.marginY).toBe(margin)
+      expect(box?.props.paddingY).toBe(margin)
+      await ui.unmount()
+    }
+  })
+
   test('rewrites task lists on the terminal only', async $ => {
     const term = await $.ui.mount({
       plugin: 'gfm-render',

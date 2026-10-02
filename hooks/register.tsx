@@ -99,6 +99,10 @@ export const register: Register = on => {
               borderStyle="round"
               borderColor={alert.color}
               paddingX={1}
+              // The desktop's proportional text packs boxes tighter than the
+              // terminal's cells, so it gets room around and inside each one.
+              marginY={e.surface === 'terminal' ? 0 : 1}
+              paddingY={e.surface === 'terminal' ? 0 : 1}
             >
               <Text bold color={alert.color}>
                 {`${alert.icon} ${alert.label}`}
