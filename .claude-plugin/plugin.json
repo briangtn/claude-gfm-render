@@ -1,0 +1,11 @@
+{
+  "name": "gfm-render",
+  "version": "0.1.0",
+  "description": "GitHub Flavored Markdown in the transcript: alerts (> [!NOTE]), task lists, strikethrough and Mermaid diagrams",
+  "author": {
+    "name": "briangtn",
+    "url": "https://github.com/briangtn"
+  },
+  "homepage": "https://github.com/briangtn/claude-gfm-render",
+  "license": "MIT"
+}

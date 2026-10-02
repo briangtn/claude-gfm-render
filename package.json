@@ -1,0 +1,13 @@
+{
+  "name": "claude-gfm-render",
+  "private": true,
+  "description": "Build tooling for the vendored Mermaid renderers; the mod itself needs no install.",
+  "scripts": {
+    "build:vendor": "./scripts/build-vendor.sh",
+    "validate": "claude plugin validate .",
+    "test": "claude plugin test ."
+  },
+  "devDependencies": {
+    "beautiful-mermaid": "1.1.3"
+  }
+}
