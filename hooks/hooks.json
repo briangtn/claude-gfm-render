@@ -1,1 +1,15 @@
-{ "modules": ["./register.tsx"] }
+{
+  "modules": ["./register.tsx"],
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_PLUGIN_OPTION_PROMPTHINT\" = false ] || cat \"${CLAUDE_PLUGIN_ROOT}/GFM.md\""
+          }
+        ]
+      }
+    ]
+  }
+}

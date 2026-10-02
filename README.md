@@ -8,7 +8,7 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.286%2B-d97757?logo=anthropic&logoColor=white)](https://claude.com/claude-code)
 [![Mod](https://img.shields.io/badge/type-function%20hooks%20mod-262626)](#install)
-[![Tests](https://img.shields.io/badge/tests-9%20passing-3fb950)](hooks/gfm.test.tsx)
+[![Tests](https://img.shields.io/badge/tests-10%20passing-3fb950)](hooks/gfm.test.tsx)
 [![License: MIT](https://img.shields.io/badge/license-MIT-4493f8)](LICENSE)
 
 [Install](#install) · [Before / after](#before--after) · [What it handles](#what-it-handles) · [How it works](#how-it-works)
@@ -38,6 +38,20 @@ To load it in every session, terminal and desktop app alike, add it to `~/.claud
 
 > [!NOTE]
 > Mods (function hooks) are an early-access API of Claude Code and may change between releases. Built and tested on Claude Code 2.1.286 and 2.1.287. No build step: the mod is plain files, and the folder is watched, so an edit reloads it in the running session.
+
+### Claude writes GFM on its own
+
+Drawing GFM is half the job: Claude also has to write it. The mod ships [`GFM.md`](GFM.md), a short note on what the transcript can draw (alerts, task lists, strikethrough, the Mermaid types that render), which a `SessionStart` hook adds to Claude's context at startup, after `/clear` and after a compaction. No `CLAUDE.md` to edit.
+
+To turn it off and keep only the rendering, in `~/.claude/settings.json`:
+
+```json
+{
+  "pluginConfigs": {
+    "gfm-render": { "options": { "promptHint": false } }
+  }
+}
+```
 
 ## Before / after
 
@@ -157,6 +171,7 @@ npm run build:vendor    # rebuild both Mermaid bundles with bun
 | `hooks/mermaid.ts` | Unicode art sized to the terminal, SVG theming |
 | `hooks/gfm.test.tsx` | tests, run on every surface |
 | `renderer/svg.mjs` | Mermaid on stdin, SVG on stdout |
+| `GFM.md` | what Claude is told it can write, loaded by the `SessionStart` hook in `hooks/hooks.json` |
 
 Issues and PRs welcome, especially screenshots from other terminals and the desktop app's light theme.
 

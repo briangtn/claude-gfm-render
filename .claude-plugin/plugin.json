@@ -7,5 +7,13 @@
     "url": "https://github.com/briangtn"
   },
   "homepage": "https://github.com/briangtn/claude-gfm-render",
-  "license": "MIT"
+  "license": "MIT",
+  "userConfig": {
+    "promptHint": {
+      "type": "boolean",
+      "title": "Teach Claude to write GFM",
+      "description": "Add a system prompt section telling Claude it can use alerts, task lists, strikethrough and Mermaid diagrams",
+      "default": true
+    }
+  }
 }
