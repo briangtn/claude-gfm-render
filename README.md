@@ -70,6 +70,10 @@ Real `claude` sessions (100 columns, captured with `tmux`); *before* is the same
 
 ### On desktop, VS Code and mobile
 
+Alerts get a little more room, captured in the Claude desktop app (dark theme):
+
+<img src="docs/screenshots/desktop-alerts-dark.png" alt="Alerts in the Claude desktop app">
+
 Mermaid becomes a real SVG that follows the light or dark scheme. Below, the mod's own output rendered by Chrome (not a capture of the app):
 
 <picture>
@@ -154,7 +158,7 @@ npm run build:vendor    # rebuild both Mermaid bundles with bun
 | `hooks/gfm.test.tsx` | tests, run on every surface |
 | `renderer/svg.mjs` | Mermaid on stdin, SVG on stdout |
 
-Issues and PRs welcome, especially screenshots from other terminals and the desktop app.
+Issues and PRs welcome, especially screenshots from other terminals and the desktop app's light theme.
 
 ## License
 
