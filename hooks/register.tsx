@@ -59,7 +59,7 @@ export const register: Register = on => {
           return <Markdown key={key} text={s.fence} />
         }
         return (
-          <Box key={key} flexDirection="column" marginY={1}>
+          <Box key={key} flexDirection="column" marginTop={i === 0 ? 0 : 1} marginBottom={1}>
             {art.split('\n').map((line, j) => (
               <Text key={`${key}-${j}`} wrap="truncate-end">
                 {line === '' ? ' ' : line}
@@ -76,7 +76,7 @@ export const register: Register = on => {
       }
       const { Svg } = $.ui.resolve(e)
       return (
-        <Box key={key} marginY={1}>
+        <Box key={key} marginTop={i === 0 ? 0 : 1} marginBottom={1}>
           <Svg source={svg} alt="Diagramme Mermaid" />
         </Box>
       )
