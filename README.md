@@ -2,6 +2,9 @@
 
 <img src="docs/hero.png" alt="claude-gfm-render: GitHub Flavored Markdown in Claude Code" width="100%">
 
+[![reach](https://raw.githubusercontent.com/karanb192/awesome-claude-code-mods/main/badges/briangtn--claude-gfm-render--gfm-render-reach.svg)](https://github.com/karanb192/awesome-claude-code-mods/blob/main/catalogue.md)
+[![validates](https://raw.githubusercontent.com/karanb192/awesome-claude-code-mods/main/badges/briangtn--claude-gfm-render--gfm-render-validates.svg)](https://github.com/karanb192/awesome-claude-code-mods/blob/main/catalogue.md)
+
 # claude-gfm-render
 
 **Alerts, task lists, strikethrough and Mermaid diagrams, drawn inside Claude Code's replies.**
@@ -17,7 +20,7 @@
 
 ---
 
-Claude writes GitHub Flavored Markdown all day: `> [!WARNING]` callouts, `- [ ]` checklists, ```` ```mermaid ```` diagrams. The terminal shows them as raw text. This mod draws them, without touching the message itself (`ctrl+o` still shows the original).
+Claude writes GitHub Flavored Markdown all day: `> [!WARNING]` callouts, `- [ ]` checklists, ` ```mermaid ` diagrams. The terminal shows them as raw text. This mod draws them, without touching the message itself (`ctrl+o` still shows the original).
 
 ## Install
 
@@ -55,7 +58,7 @@ To turn it off and keep only the rendering, in `~/.claude/settings.json`:
 
 ## Before / after
 
-Real `claude` sessions (100 columns, captured with `tmux`); *before* is the same reply without the mod.
+Real `claude` sessions (100 columns, captured with `tmux`); _before_ is the same reply without the mod.
 
 <table>
   <tr>
@@ -99,39 +102,39 @@ Mermaid becomes a real SVG that follows the light or dark scheme. Below, the mod
 <summary><b>Sequence diagram, light and dark</b></summary>
 <br>
 
-| Light | Dark |
-|---|---|
+| Light                                                               | Dark                                                              |
+| ------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | ![Sequence SVG, light](docs/screenshots/desktop-sequence-light.png) | ![Sequence SVG, dark](docs/screenshots/desktop-sequence-dark.png) |
 
 </details>
 
 ## What it handles
 
-| | Markdown | Terminal | Desktop · VS Code · mobile |
-|:--:|---|:--:|:--:|
-| 💬 | Alerts `> [!NOTE]` `[!TIP]` `[!IMPORTANT]` `[!WARNING]` `[!CAUTION]`, any markdown inside | ✅ colored box | ✅ colored box |
-| ☑️ | Task lists `- [ ]` / `- [x]` (also `*`, `+`, `1.`) | ✅ ☐ / ☑ | ➖ native |
-| ~~S~~ | Strikethrough `~~text~~` | ✅ | ➖ native |
-| 🔀 | Mermaid flowchart / graph | ✅ Unicode art | ✅ SVG |
-| 🧭 | Mermaid sequence, state, class, ER, xychart | ✅ Unicode art | ✅ SVG |
-| 🔒 | Code fences and inline code | never rewritten | never rewritten |
-| 📝 | Everything else (headings, tables, links, emphasis…) | native | native |
+|       | Markdown                                                                                  |    Terminal     | Desktop · VS Code · mobile |
+| :---: | ----------------------------------------------------------------------------------------- | :-------------: | :------------------------: |
+|  💬   | Alerts `> [!NOTE]` `[!TIP]` `[!IMPORTANT]` `[!WARNING]` `[!CAUTION]`, any markdown inside | ✅ colored box  |       ✅ colored box       |
+|  ☑️   | Task lists `- [ ]` / `- [x]` (also `*`, `+`, `1.`)                                        |    ✅ ☐ / ☑     |         ➖ native          |
+| ~~S~~ | Strikethrough `~~text~~`                                                                  |       ✅        |         ➖ native          |
+|  🔀   | Mermaid flowchart / graph                                                                 | ✅ Unicode art  |           ✅ SVG           |
+|  🧭   | Mermaid sequence, state, class, ER, xychart                                               | ✅ Unicode art  |           ✅ SVG           |
+|  🔒   | Code fences and inline code                                                               | never rewritten |      never rewritten       |
+|  📝   | Everything else (headings, tables, links, emphasis…)                                      |     native      |           native           |
 
 <details>
 <summary><b>What it does not handle</b></summary>
 <br>
 
-| Case | What you get |
-|---|---|
-| Mermaid `gantt`, `pie`, `mindmap`, `gitGraph`, `journey`, `timeline`, `quadrantChart`, `sankey`, C4… | the code block, as written |
-| Mermaid with a syntax error, or wider than the terminal even with tighter spacing | the code block |
-| Mermaid on desktop without `node` on the session's `PATH` | the Unicode art in a code block |
-| Single-line Mermaid (`graph TD; A-->B`) | may fail to parse: write one statement per line |
-| An alert nested in a list item or in another blockquote (`> > [!NOTE]`) | a plain blockquote |
-| A reply still streaming in | the native rendering until the alert or the closing ```` ``` ```` arrives |
-| A single reply block over 10,000 characters | the native rendering of that block |
-| Footnotes, emoji shortcodes, `#123` / `@user` autolinks, `$math$`, raw HTML | left to the native renderer |
-| Your own messages and tool output | untouched: only Claude's replies are drawn |
+| Case                                                                                                 | What you get                                                        |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Mermaid `gantt`, `pie`, `mindmap`, `gitGraph`, `journey`, `timeline`, `quadrantChart`, `sankey`, C4… | the code block, as written                                          |
+| Mermaid with a syntax error, or wider than the terminal even with tighter spacing                    | the code block                                                      |
+| Mermaid on desktop without `node` on the session's `PATH`                                            | the Unicode art in a code block                                     |
+| Single-line Mermaid (`graph TD; A-->B`)                                                              | may fail to parse: write one statement per line                     |
+| An alert nested in a list item or in another blockquote (`> > [!NOTE]`)                              | a plain blockquote                                                  |
+| A reply still streaming in                                                                           | the native rendering until the alert or the closing ` ``` ` arrives |
+| A single reply block over 10,000 characters                                                          | the native rendering of that block                                  |
+| Footnotes, emoji shortcodes, `#123` / `@user` autolinks, `$math$`, raw HTML                          | left to the native renderer                                         |
+| Your own messages and tool output                                                                    | untouched: only Claude's replies are drawn                          |
 
 Known glitch: in the terminal, an edge label leaving a `{decision}` node can show a stray `├` (beautiful-mermaid's ASCII layout, visible in the flowchart above).
 
@@ -164,14 +167,14 @@ npm run validate        # claude plugin validate .
 npm run build:vendor    # rebuild both Mermaid bundles with bun
 ```
 
-| File | Role |
-|---|---|
-| `hooks/register.tsx` | the `ui.render` hook and the SVG process call |
-| `hooks/gfm.ts` | splits a reply into blocks; task-list and strikethrough rewrites |
-| `hooks/mermaid.ts` | Unicode art sized to the terminal, SVG theming |
-| `hooks/gfm.test.tsx` | tests, run on every surface |
-| `renderer/svg.mjs` | Mermaid on stdin, SVG on stdout |
-| `GFM.md` | what Claude is told it can write, loaded by the `SessionStart` hook in `hooks/hooks.json` |
+| File                 | Role                                                                                      |
+| -------------------- | ----------------------------------------------------------------------------------------- |
+| `hooks/register.tsx` | the `ui.render` hook and the SVG process call                                             |
+| `hooks/gfm.ts`       | splits a reply into blocks; task-list and strikethrough rewrites                          |
+| `hooks/mermaid.ts`   | Unicode art sized to the terminal, SVG theming                                            |
+| `hooks/gfm.test.tsx` | tests, run on every surface                                                               |
+| `renderer/svg.mjs`   | Mermaid on stdin, SVG on stdout                                                           |
+| `GFM.md`             | what Claude is told it can write, loaded by the `SessionStart` hook in `hooks/hooks.json` |
 
 Issues and PRs welcome, especially screenshots from other terminals and the desktop app's light theme.
 
