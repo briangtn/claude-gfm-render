@@ -26,8 +26,8 @@ function mermaidSvg($: EngineInterface, source: string): Promise<string | undefi
 
 export const register: Register = on => {
   on('ui.render', { component: 'AssistantMessage' }, async ($, e, next) => {
-    // The desktop, VS Code and mobile renderers already draw task lists and
-    // strikethrough; the terminal's may not, so only it gets the rewrite.
+    // The desktop, VS Code and mobile renderers already draw task lists; the
+    // terminal's does not, so only it gets the rewrite.
     const text = e.surface === 'terminal' ? rewriteInline(e.props.text) : e.props.text
     const segments = splitBlocks(text)
 

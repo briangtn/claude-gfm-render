@@ -114,7 +114,7 @@ Mermaid becomes a real SVG that follows the light or dark scheme. Below, the mod
 | :---: | ----------------------------------------------------------------------------------------- | :-------------: | :------------------------: |
 |  💬   | Alerts `> [!NOTE]` `[!TIP]` `[!IMPORTANT]` `[!WARNING]` `[!CAUTION]`, any markdown inside | ✅ colored box  |       ✅ colored box       |
 |  ☑️   | Task lists `- [ ]` / `- [x]` (also `*`, `+`, `1.`)                                        |    ✅ ☐ / ☑     |         ➖ native          |
-| ~~S~~ | Strikethrough `~~text~~`                                                                  |       ✅        |         ➖ native          |
+| ~~S~~ | Strikethrough `~~text~~`                                                                  |    ➖ native    |         ➖ native          |
 |  🔀   | Mermaid flowchart / graph                                                                 | ✅ Unicode art  |           ✅ SVG           |
 |  🧭   | Mermaid sequence, state, class, ER, xychart                                               | ✅ Unicode art  |           ✅ SVG           |
 |  🔒   | Code fences and inline code                                                               | never rewritten |      never rewritten       |
@@ -170,7 +170,7 @@ npm run build:vendor    # rebuild both Mermaid bundles with bun
 | File                 | Role                                                                                      |
 | -------------------- | ----------------------------------------------------------------------------------------- |
 | `hooks/register.tsx` | the `ui.render` hook and the SVG process call                                             |
-| `hooks/gfm.ts`       | splits a reply into blocks; task-list and strikethrough rewrites                          |
+| `hooks/gfm.ts`       | splits a reply into blocks; task-list rewrite                                             |
 | `hooks/mermaid.ts`   | Unicode art sized to the terminal, SVG theming                                            |
 | `hooks/gfm.test.tsx` | tests, run on every surface                                                               |
 | `renderer/svg.mjs`   | Mermaid on stdin, SVG on stdout                                                           |
