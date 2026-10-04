@@ -130,6 +130,7 @@ Mermaid becomes a real SVG that follows the light or dark scheme. Below, the mod
 | Mermaid with a syntax error, or wider than the terminal even with tighter spacing                    | the code block                                                      |
 | Mermaid on desktop without `node` on the session's `PATH`                                            | the Unicode art in a code block                                     |
 | Single-line Mermaid (`graph TD; A-->B`)                                                              | may fail to parse: write one statement per line                     |
+| CJK in a node or state id (`請求 --> 處理`), not just its label (`A[請求]`), in the terminal        | the code block                                                      |
 | An alert nested in a list item or in another blockquote (`> > [!NOTE]`)                              | a plain blockquote                                                  |
 | A reply still streaming in                                                                           | the native rendering until the alert or the closing ` ``` ` arrives |
 | A single reply block over 10,000 characters                                                          | the native rendering of that block                                  |

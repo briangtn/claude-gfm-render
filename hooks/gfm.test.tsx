@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'claude-code/testing'
 
 import { rewriteInline, splitBlocks } from './gfm'
-import { themeSvg } from './mermaid'
+import { mermaidArt, themeSvg } from './mermaid'
 
 const REPLY = [
   'Intro **text**',
@@ -101,6 +101,36 @@ describe('mermaid', () => {
     })
     expect(await narrow.find({ type: 'Markdown', text: /```mermaid/ })).toBeDefined()
     await narrow.unmount()
+  })
+})
+
+describe('wide characters', () => {
+  test('sizes boxes to the two columns a CJK character takes', async () => {
+    const art = mermaidArt(['sequenceDiagram', '  participant 使用者', '  participant API', '  使用者->>API: 送出'].join('\n'), 100)
+    // Three CJK characters take six columns, plus a space on each side.
+    expect(art?.split('\n')[0]).toStartWith('┌────────┐')
+    expect(art).toContain('│ 使用者 │')
+    expect(art).not.toContain('')
+  })
+
+  test('falls back to the code block when the renderer draws nothing', async $ => {
+    // beautiful-mermaid parses no node from CJK ids and returns blank art.
+    const blank = '```mermaid\nflowchart TD\n  請求 --> 處理\n```'
+    expect(mermaidArt('flowchart TD\n  請求 --> 處理', 100)).toBeUndefined()
+    const term = await $.ui.mount({
+      plugin: 'gfm-render',
+      surface: 'terminal',
+      component: 'AssistantMessage',
+      props: { text: blank, isFirstOfReply: false },
+      viewport: { columns: 100, rows: 40 },
+    })
+    expect(await term.find({ type: 'Markdown', text: /```mermaid/ })).toBeDefined()
+    await term.unmount()
+  })
+
+  test('falls back rather than draw CJK out of line', async () => {
+    // A state id holding CJK fails to parse once widened; unwidened it draws misaligned.
+    expect(mermaidArt('stateDiagram-v2\n  [*] --> 待處理\n  待處理 --> [*]', 100)).toBeUndefined()
   })
 })
 
