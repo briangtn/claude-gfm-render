@@ -25,16 +25,29 @@ export function remember<T>(cache: Map<string, T>, key: string, make: () => T): 
   return cache.get(key)!
 }
 
+// beautiful-mermaid sizes a label by its code points, so a CJK character
+// (two terminal columns) overflows its box. Each one is followed by PAD while
+// the renderer measures and draws, then PAD is dropped: the character keeps
+// the two cells it was given.
+const PAD = ''
+// East Asian Wide and Fullwidth blocks, the ones a terminal draws two columns wide.
+const WIDE =
+  /[ᄀ-ᅟ⺀-〾ぁ-㏿㐀-䶿一-鿿ꀀ-꓏가-힣豈-﫿︰-﹏＀-｠￠-￦]/g
+
+/** Columns the widest line takes, PAD still in, so a wide character counts two. */
 function width(art: string): number {
   return Math.max(...art.split('\n').map(l => Array.from(l).length))
 }
 
 /** The diagram as text art at most `columns` wide, tightening the spacing to fit. */
 export function mermaidArt(source: string, columns: number): string | undefined {
+  const widened = source.replace(WIDE, c => c + PAD)
   for (const paddingX of [5, 3, 1]) {
-    const art = remember(arts, `${paddingX}:${source}`, () => {
+    const art = remember(arts, `${paddingX}:${widened}`, () => {
       try {
-        return renderMermaidASCII(source, { colorMode: 'none', paddingX }).replace(/\s+$/gm, '')
+        const drawn = renderMermaidASCII(widened, { colorMode: 'none', paddingX }).replace(/\s+$/gm, '')
+        // Blank when nothing parsed, e.g. a CJK id the widening broke: the code block beats a hole.
+        return drawn.trim() === '' ? undefined : drawn
       } catch {
         return undefined
       }
@@ -43,7 +56,7 @@ export function mermaidArt(source: string, columns: number): string | undefined 
       return undefined
     }
     if (width(art) <= columns) {
-      return art
+      return art.replaceAll(PAD, '')
     }
   }
   return undefined
