@@ -1,5 +1,5 @@
 // Pure GFM helpers: split a reply into markdown, alert and mermaid blocks,
-// and rewrite the GFM bits a renderer may not draw (task lists, ~~strike~~).
+// and rewrite the GFM bit a renderer may not draw (task lists).
 
 export type AlertType = 'NOTE' | 'TIP' | 'IMPORTANT' | 'WARNING' | 'CAUTION'
 
@@ -93,15 +93,11 @@ export function splitBlocks(text: string): Segment[] {
 }
 
 const TASK = /^(\s*(?:[-*+]|\d+[.)])\s+)\[([ xX])\](?=\s)/
-const STRIKE = /~~(?=\S)([^~\n]*?\S)~~/g
-const CODE_SPAN = /(`+)[^`]*?\1/g
 
-/** Draws a strike through each character with U+0336, for renderers without `del`. */
-function strike(text: string): string {
-  return Array.from(text).map(c => c + '̶').join('')
-}
-
-/** Rewrites task-list boxes as ☐/☑ and ~~text~~ as struck text, outside code. */
+/**
+ * Rewrites task-list boxes as ☐/☑, outside code fences. ~~strikethrough~~ is
+ * left alone: the terminal's own renderer already draws it with SGR 9.
+ */
 export function rewriteInline(text: string): string {
   let fence: string | null = null
 
@@ -120,14 +116,7 @@ export function rewriteInline(text: string): string {
         return line
       }
 
-      const tasked = line.replace(TASK, (_, lead: string, mark: string) => `${lead}${mark === ' ' ? '☐' : '☑'}`)
-      let out = ''
-      let last = 0
-      for (const m of tasked.matchAll(CODE_SPAN)) {
-        out += tasked.slice(last, m.index).replace(STRIKE, (_, inner: string) => strike(inner)) + m[0]
-        last = m.index! + m[0].length
-      }
-      return out + tasked.slice(last).replace(STRIKE, (_, inner: string) => strike(inner))
+      return line.replace(TASK, (_, lead: string, mark: string) => `${lead}${mark === ' ' ? '☐' : '☑'}`)
     })
     .join('\n')
 }

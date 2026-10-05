@@ -137,10 +137,10 @@ describe('mermaid', () => {
 })
 
 describe('rewriteInline', () => {
-  test('draws task boxes and strikes outside code', async () => {
+  test('draws task boxes and leaves strikethrough to the native renderer', async () => {
     const out = rewriteInline(REPLY)
     expect(out).toContain('- ☐ todo')
-    expect(out).toContain('- ☑ done o̶l̶d̶ `~~kept~~`')
+    expect(out).toContain('- ☑ done ~~old~~ `~~kept~~`')
     expect(out).toContain('> [!NOTE]')
   })
 })
