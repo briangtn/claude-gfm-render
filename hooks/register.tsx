@@ -92,7 +92,14 @@ export const register: Register = on => {
               onPress={() => update($, memberOf(showCode, { requestId: `${e.requestId}:${i}` }), shown => !shown)}
             />
           </Box>
-          {isCode ? <Code source={s.text} language="mermaid" /> : <Svg source={svg} alt="Diagramme Mermaid" />}
+          {isCode ? (
+            <Code source={s.text} language="mermaid" />
+          ) : (
+            // A row sizes the SVG to its own width; the column would stretch it.
+            <Box>
+              <Svg source={svg} alt="Diagramme Mermaid" />
+            </Box>
+          )}
         </Box>
       )
     }
