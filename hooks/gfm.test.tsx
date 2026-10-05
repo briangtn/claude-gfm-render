@@ -80,6 +80,38 @@ describe('mermaid', () => {
     expect(themeSvg('Error: nope')).toBeUndefined()
   })
 
+  test('toggles a drawn diagram between its SVG and its source', async ($, on) => {
+    on('process.run', async () => ({
+      value: {
+        exitCode: 0,
+        stdout: '<svg viewBox="0 0 1 1" style="--bg:#FFFFFF;--fg:#27272A"></svg>',
+        stderr: '',
+        isStdoutTruncated: false,
+        isStderrTruncated: false,
+      },
+    }))
+    const text = '```mermaid\ngraph TD\n  X --> Y\n```'
+    for (const surface of ['desktop', 'vscode', 'mobile'] as const) {
+      const ui = await $.ui.mount({
+        plugin: 'gfm-render',
+        surface,
+        component: 'AssistantMessage',
+        props: { text, isFirstOfReply: false },
+      })
+      expect(await ui.find({ type: 'Svg' })).toBeDefined()
+      expect((await ui.find({ key: 'mermaid-0-toggle' }))?.props.label).toBe('Code')
+
+      await ui.press({ key: 'mermaid-0-toggle' })
+      expect(await ui.find({ type: 'Svg' })).toBeUndefined()
+      expect(await ui.find({ type: 'Code', source: /X --> Y/ })).toBeDefined()
+      expect((await ui.find({ key: 'mermaid-0-toggle' }))?.props.label).toBe('Diagramme')
+
+      await ui.press({ key: 'mermaid-0-toggle' })
+      expect(await ui.find({ type: 'Svg' })).toBeDefined()
+      await ui.unmount()
+    }
+  })
+
   test('falls back to the code block when it cannot draw', async $ => {
     const broken = '```mermaid\nnot a diagram\n```'
     const term = await $.ui.mount({

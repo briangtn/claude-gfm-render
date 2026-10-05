@@ -8,6 +8,7 @@
   },
   "homepage": "https://github.com/briangtn/claude-gfm-render",
   "license": "MIT",
+  "types": "./types/index.d.ts",
   "userConfig": {
     "promptHint": {
       "type": "boolean",

@@ -1,3 +1,4 @@
+import { atom, memberOf, read, update } from 'claude-code'
 import type { EngineInterface, Register } from 'claude-code'
 
 import { ALERTS, rewriteInline, splitBlocks } from './gfm'
@@ -8,6 +9,9 @@ import { mermaidArt, remember, themeSvg } from './mermaid'
 const MAX_MARKDOWN = 10000
 
 const svgs = new Map<string, Promise<string | undefined>>()
+
+/** Whether each diagram shows its source instead of its drawing, by message and position. */
+const showCode = atom({ plugin: 'gfm-render', key: 'showCode' } as const, false)
 
 /** The diagram as an SVG, rendered once per source by node running renderer/svg.mjs. */
 function mermaidSvg($: EngineInterface, source: string): Promise<string | undefined> {
@@ -41,11 +45,13 @@ export const register: Register = on => {
 
     // Rendered before drawing: an SVG takes a node process (cached per source).
     const svgs = new Map<number, string | undefined>()
+    const codes = new Map<number, boolean>()
     if (e.surface !== 'terminal') {
       await Promise.all(
         segments.map(async (s, i) => {
           if (s.kind === 'mermaid') {
             svgs.set(i, await mermaidSvg($, s.text))
+            codes.set(i, await read($, memberOf(showCode, { requestId: `${e.requestId}:${i}` })))
           }
         }),
       )
@@ -74,10 +80,19 @@ export const register: Register = on => {
         const art = mermaidArt(s.text, 200)
         return <Markdown key={key} text={art === undefined ? s.fence : `\`\`\`\n${art}\n\`\`\``} />
       }
-      const { Svg } = $.ui.resolve(e)
+      const { Svg, Code, Button } = $.ui.resolve(e)
+      const isCode = codes.get(i) === true
       return (
-        <Box key={key} marginTop={i === 0 ? 0 : 1} marginBottom={1}>
-          <Svg source={svg} alt="Diagramme Mermaid" />
+        <Box key={key} flexDirection="column" marginTop={i === 0 ? 0 : 1} marginBottom={1}>
+          <Box justifyContent="flex-end">
+            <Button
+              key={`${key}-toggle`}
+              label={isCode ? 'Diagramme' : 'Code'}
+              dimColor
+              onPress={() => update($, memberOf(showCode, { requestId: `${e.requestId}:${i}` }), shown => !shown)}
+            />
+          </Box>
+          {isCode ? <Code source={s.text} language="mermaid" /> : <Svg source={svg} alt="Diagramme Mermaid" />}
         </Box>
       )
     }
