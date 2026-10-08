@@ -9,11 +9,11 @@ export type Segment =
   | { kind: 'mermaid'; text: string; fence: string }
 
 export const ALERTS: Record<AlertType, { label: string; icon: string; color: string }> = {
-  NOTE: { label: 'Note', icon: 'ℹ', color: '#4493f8' },
-  TIP: { label: 'Tip', icon: '✦', color: '#3fb950' },
-  IMPORTANT: { label: 'Important', icon: '‼', color: '#ab7df8' },
-  WARNING: { label: 'Warning', icon: '▲', color: '#d29922' },
-  CAUTION: { label: 'Caution', icon: '✖', color: '#f85149' },
+  NOTE: { label: 'Note', icon: 'ℹ', color: 'ide' },
+  TIP: { label: 'Tip', icon: '✦', color: 'success' },
+  IMPORTANT: { label: 'Important', icon: '‼', color: 'merged' },
+  WARNING: { label: 'Warning', icon: '▲', color: 'warning' },
+  CAUTION: { label: 'Caution', icon: '✖', color: 'error' },
 }
 
 const FENCE = /^\s{0,3}(`{3,}|~{3,})\s*(\S*)/
