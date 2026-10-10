@@ -85,7 +85,7 @@ Real `claude` sessions (100 columns, captured with `tmux`); _before_ is the same
 <img src="docs/screenshots/terminal-sequence.png" alt="Mermaid sequence diagram drawn in Unicode">
 </details>
 
-### On desktop, VS Code and mobile
+### In the Desktop app
 
 Alerts get a little more room, captured in the Claude desktop app (dark theme):
 
@@ -110,7 +110,9 @@ Mermaid becomes a real SVG that follows the light or dark scheme. Below, the mod
 
 ## What it handles
 
-|       | Markdown                                                                                  |    Terminal     | Desktop · VS Code · mobile |
+Custom drawing is available in the terminal and the Desktop app's Code tab (except WSL sessions). The VS Code extension's chat panel and Remote Control views on claude.ai or the mobile app do not display it; with Remote Control, drawings remain in the terminal on your machine. Hooks can load and run in a session without the viewing app displaying their custom drawing. Running the CLI in VS Code's integrated terminal uses the terminal UI. See [Where mods run](https://code.claude.com/docs/en/plugins/mods/overview#where-mods-run) for the current platform support.
+
+|       | Markdown                                                                                  |    Terminal     | Desktop app (Code tab) |
 | :---: | ----------------------------------------------------------------------------------------- | :-------------: | :------------------------: |
 |  💬   | Alerts `> [!NOTE]` `[!TIP]` `[!IMPORTANT]` `[!WARNING]` `[!CAUTION]`, any markdown inside | ✅ colored box  |       ✅ colored box       |
 |  ☑️   | Task lists `- [ ]` / `- [x]` (also `*`, `+`, `1.`)                                        |    ✅ ☐ / ☑     |         ➖ native          |
@@ -157,7 +159,7 @@ graph LR
 Mermaid is rendered by [beautiful-mermaid](https://github.com/lukilabs/beautiful-mermaid), split in two because a hooks module may not import a file over 1 MiB and has no `eval`, while the ELK layout engine the SVG needs weighs 1.6 MB:
 
 - **Terminal**: `hooks/vendor/mermaid-ascii.js`, the ASCII renderer alone (84 KB), imported by the mod.
-- **Desktop / VS Code / mobile**: `renderer/svg.mjs` run by `node`, once per diagram, then cached.
+- **Desktop app**: `renderer/svg.mjs` run by `node`, once per diagram, then cached.
 
 ## Develop
 
