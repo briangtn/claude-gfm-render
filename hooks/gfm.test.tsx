@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'claude-code/testing'
 
 import { rewriteInline, splitBlocks } from './gfm'
-import { themeSvg } from './mermaid'
+import { mermaidArt, themeSvg } from './mermaid'
 
 const REPLY = [
   'Intro **text**',
@@ -110,6 +110,59 @@ describe('mermaid', () => {
       expect(await ui.find({ type: 'Svg' })).toBeDefined()
       await ui.unmount()
     }
+  })
+
+  // Terminal cells, for the Hangul, kana and Han these tests use.
+  const cells = (line: string) => Array.from(line).reduce((n, c) => n + (/[\u3041-\u9fff\uac00-\ud7a3]/.test(c) ? 2 : 1), 0)
+
+  test('sizes boxes for wide characters so the borders line up', () => {
+    const flow = mermaidArt('flowchart LR\n  A[요청 받기] --> B[처리]\n  B --> C{성공?}\n  C -->|예| D[응답]', 100)!
+    const lines = flow.split('\n')
+    expect(lines).toHaveLength(5)
+    // Every row ends in the same column, and the first box's right border sits where its top corner does.
+    expect(new Set(lines.map(cells)).size).toBe(1)
+    expect(cells(lines[2]!.slice(0, lines[2]!.indexOf('├')))).toBe(cells(lines[0]!.slice(0, lines[0]!.indexOf('┐'))))
+    expect(lines[2]).toContain('─예─►')
+
+    const zh = mermaidArt('flowchart TD\n  A[開始] --> B[处理请求]', 100)!
+    const box = zh.split('\n').filter(l => /^[┌│└].*[┐│┘]$/.test(l))
+    expect(box).toHaveLength(10)
+    expect(new Set(box.map(cells)).size).toBe(1)
+  })
+
+  test('draws sequence diagrams with wide names aligned', () => {
+    const art = mermaidArt('sequenceDiagram\n  participant 사용자\n  participant 서버\n  사용자->>서버: 로그인 요청', 100)!
+    const [top, name, bottom] = art.split('\n')
+    expect(new Set([top, name, bottom].map(l => cells(l!.trimEnd()))).size).toBe(1)
+    expect(art).toContain('로그인 요청')
+  })
+
+  test('falls back to the code block when a wide character is in a node id', async $ => {
+    const source = 'flowchart TD\n  A[開始] --> 請求\n  請求 --> B[End]'
+    expect(mermaidArt(source, 100)).toBeUndefined()
+    expect(mermaidArt('stateDiagram-v2\n  [*] --> 대기\n  대기 --> [*]', 100)).toBeUndefined()
+
+    const term = await $.ui.mount({
+      plugin: 'gfm-render',
+      surface: 'terminal',
+      component: 'AssistantMessage',
+      props: { text: '```mermaid\n' + source + '\n```', isFirstOfReply: false },
+      viewport: { columns: 100, rows: 40 },
+    })
+    expect(await term.find({ type: 'Markdown', text: /請求/ })).toBeDefined()
+    await term.unmount()
+  })
+
+  test('leaves ASCII diagrams exactly as the renderer draws them', () => {
+    expect(mermaidArt('graph LR\n  A[Client] --> B(Proxy)', 100)).toBe(
+      [
+        '┌────────┐     ╭───────╮',
+        '│        │     │       │',
+        '│ Client ├────►│ Proxy │',
+        '│        │     │       │',
+        '└────────┘     ╰───────╯',
+      ].join('\n'),
+    )
   })
 
   test('falls back to the code block when it cannot draw', async $ => {

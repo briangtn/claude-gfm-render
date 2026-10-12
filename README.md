@@ -128,6 +128,7 @@ Mermaid becomes a real SVG that follows the light or dark scheme. Below, the mod
 | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | Mermaid `gantt`, `pie`, `mindmap`, `gitGraph`, `journey`, `timeline`, `quadrantChart`, `sankey`, C4… | the code block, as written                                          |
 | Mermaid with a syntax error, or wider than the terminal even with tighter spacing                    | the code block                                                      |
+| Mermaid in the terminal with a wide character (Hangul, kanji, kana, emoji) in a node id, not a label | the code block                                                      |
 | Mermaid on desktop without `node` on the session's `PATH`                                            | the Unicode art in a code block                                     |
 | Single-line Mermaid (`graph TD; A-->B`)                                                              | may fail to parse: write one statement per line                     |
 | An alert nested in a list item or in another blockquote (`> > [!NOTE]`)                              | a plain blockquote                                                  |
